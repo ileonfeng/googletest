@@ -1,0 +1,43 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "taskName": "BuildCurrentFile",
+            "label": "c++",
+            "type": "shell",
+            // 必须有这个配置，才能直接 ctrl+shift+B 编译当前的文件
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            // 通过增加节点，实现mac和win分别配置
+            "windows": {
+                "command": "g++",
+                "args": [
+                    "-ggdb",
+                    "\"${file}\"",
+                    "--std=c++11",
+                    "-I",
+                    "${workspaceRoot}\\googletest\\include",
+                    "${workspaceRoot}\\build\\lib\\libgtestd.a",
+                    "${workspaceRoot}\\build\\lib\\libgmock_maind.a",
+                    "${workspaceRoot}\\build\\lib\\libgmockd.a",
+                    "${workspaceRoot}\\build\\lib\\libgtest_maind.a",
+                    "-o",
+                    "${workspaceRoot}\\build\\${fileBasenameNoExtension}.bin",
+                ]
+            },
+            "osx": {
+                "command": "clang++",
+                "args": [
+                    "-g",
+                    "${file}",
+                    "-std=c++11",
+                    "-o",
+                    // 注意要自行确保目录存在，否则报错可能形如 ld: can't open output file for writing
+                    "${workspaceRoot}/build/${fileBasenameNoExtension}.bin"
+                ]
+            }
+        }
+    ]
+}
